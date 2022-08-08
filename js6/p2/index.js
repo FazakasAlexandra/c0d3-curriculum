@@ -28,7 +28,7 @@ const server = new ApolloServer({
 });
 
 
-app.listen(3000, async () => {
+app.listen(process.env.PORT || 3000, async () => {
   await server.start();
   server.applyMiddleware({
     app,
