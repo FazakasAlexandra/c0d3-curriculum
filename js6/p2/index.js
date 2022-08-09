@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const app = express();
 const { ApolloServer } = require("apollo-server-express");
+const { ApolloServerPluginLandingPageGraphQLPlayground } = require('apollo-server-core');
 const { typeDefs, resolvers, storePokemons } = require("./schema");
 
 app.use(express.static("public"));
@@ -27,6 +28,9 @@ const server = new ApolloServer({
     req,
     res
   }),
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground(),
+  ]
 });
 
 
