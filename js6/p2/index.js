@@ -21,6 +21,8 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   credentials: 'include',
+  introspection: true,
+  playground: true,
   context: ({ req, res }) => ({
     req,
     res
@@ -33,7 +35,7 @@ app.listen(process.env.PORT || 3000, async () => {
   server.applyMiddleware({
     app,
     path: "/graphql",
-    cors: { origin: "https://studio.apollographql.com", credentials: true },
+    cors: { origin: true, credentials: true },
   });
   storePokemons();
 });
