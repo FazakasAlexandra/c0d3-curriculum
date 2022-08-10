@@ -2,6 +2,19 @@ const { gql } = require("apollo-server-express");
 const fetch = require("node-fetch");
 
 const typeDefs = gql(`
+type Query {
+  lessons: [Lesson]
+  search(name: String!): [BasicPokemon]
+  pokemon(name: String!): Pokemon
+  login(name: String!): User
+  user: User
+}
+
+type Mutation {
+  enroll(title: String!): User
+  unenroll(title: String!): User
+}
+
 type Lesson {
     title: String
 }
@@ -20,38 +33,23 @@ type User {
     image: String
     lessons: [Lesson]
 }
-
-type Query {
-    lessons: [Lesson]
-    search(name: String!): [BasicPokemon]
-    pokemon(name: String!): Pokemon
-    login(name: String!): User
-    user: User
-}
-
-type Mutation {
-    enroll(title: String!): User
-    unenroll(title: String!): User
-  }
 `);
 
 let pokemons = [];
-let cache = {};
+const cache = {};
 
 const getPokemon = async (name) => {
-  let pokemon;
-
   try {
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    pokemon = await res.json();
+    const pokemon = await res.json();
+
+    return {
+      name: pokemon?.name,
+      image: pokemon?.sprites.back_default,
+    };
   } catch (e) {
     throw Error(`Cannot find pokemon: ${e}`);
   }
-
-  return {
-    name: pokemon?.name,
-    image: pokemon?.sprites.back_default,
-  };
 };
 
 const setCache = ({ name, image }) => {
@@ -77,6 +75,11 @@ const resolvers = {
       if (!session.user) {
         throw Error("403 Not authenticated");
       }
+
+      if(session.user.lessons.find(lesson => lesson.title === title)) {
+        throw Error("The user is already enrolled in this class");
+      }
+
       session.user = {
         ...session.user,
         lessons: [...session.user.lessons, { title }],
@@ -89,7 +92,7 @@ const resolvers = {
       }
       session.user = {
         ...session.user,
-        lessons: user.lessons.filter((lesson) => lesson.title !== title),
+        lessons: session.user.lessons.filter((lesson) => lesson.title !== title),
       };
 
       return session.user;
