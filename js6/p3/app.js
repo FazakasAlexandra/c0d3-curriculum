@@ -1,18 +1,18 @@
-const { useState } = React;
+const { useState, useEffect } = React;
 
 const Kanban = () => {
-  const [kanban, setKanban] = useState([
+  const [kanban, setKanban] = useState(()=> JSON.parse(localStorage.getItem("kanbanState")) ?? [
     {
       id: 1,
       title: "To-Do",
-      list: "",
+      list: [],
       color: "mediumpurple",
       input: "",
     },
     {
       id: 2,
       title: "Doing",
-      list: "",
+      list: [],
       color: "hotpink",
     },
     {
@@ -30,6 +30,10 @@ const Kanban = () => {
       input: "",
     },
   ]);
+
+  useEffect(() => {
+      localStorage.setItem("kanbanState", JSON.stringify([...kanban]))
+  }, [kanban])
 
   const setStageInput = (id, value) => {
     setKanban(
@@ -197,14 +201,19 @@ const Stars = () => {
 };
 
 const App = () => {
-  let path = window.location.pathname
-  const lastPath = path.substring(path.lastIndexOf('/') + 1)
+  let path = window.location.pathname;
+  const lastPath = path.substring(path.lastIndexOf("/") + 1) || "/";
 
-  if (lastPath === "kanban") {
-    return <Kanban />;
+  const siteMap = {
+    "/": <Kanban />,
+    kanban: <Kanban />,
+    stars: <Stars />,
+  };
+
+  if (siteMap[lastPath]) {
+    return siteMap[lastPath];
   }
-
-  return <Stars />
+  return <h1>404 Error</h1>;
 };
 
 const rootNode = document.getElementById("root");

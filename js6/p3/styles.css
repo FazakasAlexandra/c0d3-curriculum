@@ -13,10 +13,12 @@ body {
 .row.board {
     width: 100%;
     grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
     margin: 0 auto;
     justify-content: center;
     align-items: baseline;
     margin-top: 2rem;
+    flex-wrap: wrap;
 }
 
 .column {
