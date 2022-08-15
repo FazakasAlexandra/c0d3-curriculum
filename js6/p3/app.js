@@ -7,14 +7,14 @@ const KANBAN_DIRECTIONS = {
 
 const BoardForm = ({ actions, board }) => {
   return (
-    <form className="row">
+    <div className="row">
       <textarea
         rows="4"
         value={board.input}
         onChange={(e) => actions.setInput(e.target.value)}
       />
       <button onClick={(_e) => actions.addToList(board.id)}>Submit</button>
-    </form>
+    </div>
   );
 };
 
