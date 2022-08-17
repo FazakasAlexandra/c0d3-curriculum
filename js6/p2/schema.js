@@ -77,6 +77,11 @@ const resolvers = {
       if (!session.user) {
         throw Error("403 Not authenticated");
       }
+
+      if(session.user.lessons.find(lesson => lesson.title === title)) {
+        throw Error("The user is already enrolled in this class");
+      }
+
       session.user = {
         ...session.user,
         lessons: [...session.user.lessons, { title }],
@@ -89,7 +94,7 @@ const resolvers = {
       }
       session.user = {
         ...session.user,
-        lessons: user.lessons.filter((lesson) => lesson.title !== title),
+        lessons: session.user.lessons.filter((lesson) => lesson.title !== title),
       };
 
       return session.user;
