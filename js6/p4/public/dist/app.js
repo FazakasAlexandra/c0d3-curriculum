@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=function(){return React.createElement(React.Fragment,null,"Heya")};var t=React,c=(t.useState,t.useEffect,document.getElementById("root"));ReactDOM.createRoot(c).render(React.createElement((function(){return React.createElement("div",{className:"row"},React.createElement("p",null,"AAA"),React.createElement(e,null))})))})();
